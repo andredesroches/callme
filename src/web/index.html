@@ -2,15 +2,27 @@
         "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-    <title>callme.js demo</title>
+    <title>App.js demo</title>
 
-    <script type="text/javascript" src="../js/utils.js" ></script>
-    <script type="text/javascript" src="../js/callme.js" ></script>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+
+    <script type="text/javascript" src="../js/Utils.js" ></script>
+    <script type="text/javascript" src="../js/App.js" ></script>
 
 </head>
 <body>
 
+    <div id="myVideo" style="height:480px;width: 640px;">
+        <video height="240" width="360" id="userVideo" class="flip-horizontal"></video>
+    </div>
 
+    <script type="text/javascript">
+
+        var foo = new callme.App();
+
+        foo.init(document.getElementById("userVideo"));
+
+    </script>
 
 
 

@@ -9,16 +9,35 @@ function ns(namespace, obj)
 
 	if (obj[name]===undefined)
 		obj[name] = {};
-	else
-	{
-		throw new Error("The namespace"+namespace+" clashes with an existing one on it's parent object.");
-	}
-		
+
+
 	if (arr.length==0)
 		return;
 	else
 	{
-		ns(arr.splice("."),obj[name]);
+		ns(arr.join("."),obj[name]);
 	}
+
+}
+
+ns("callme.utils");
+
+//throws error if fail
+callme.utils.webRTCSupported = function(callback, errorCallback){
+
+    //TODO: try mozilla version if no webkit...
+    //also, support "video,audio" syntax...
+    if(navigator.webkitGetUserMedia)
+    {
+
+        navigator.webkitGetUserMedia({video:true,audio:true}, callback, errorCallback);
+
+    }
+    else
+    {
+        throw new Error("WebRTC is not supported")
+    }
+
+
 
 }
