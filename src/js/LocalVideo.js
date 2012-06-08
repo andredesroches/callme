@@ -9,7 +9,7 @@ callme.LocalVideo = function(){
         gotUserVideo: function(stream){
 
 
-            that._().element.src = webkitURL.createObjectURL(stream);
+            that._().element.src = callme.utils.URL().createObjectURL(stream);
             that._().element.play();
 
             that._().localStream = stream;
@@ -38,6 +38,8 @@ callme.LocalVideo.prototype.init = function(element){
 		
 };
 
+
+
 callme.LocalVideo.prototype.start = function(){
 
     try
@@ -56,5 +58,9 @@ callme.LocalVideo.prototype.stop = function(){
 
     this._().element.src = "";
 
+}
+
+callme.LocalVideo.prototype.getStream = function(){
+    return this._().localStream;
 }
 

@@ -11,39 +11,35 @@
     <script type="text/javascript" src="../js/LocalVideo.js"></script>
     <script type="text/javascript" src="../js/RemoteVideo.js"></script>
 
+    <script type="text/javascript" src="../js/App.js"></script>
+
 </head>
 <body>
 
-<div id="myVideo" style="height:480px;width: 640px;">
+<span>
+<div id="myVideo" style="float: left">
     <video height="240" width="360" id="userVideo" class="flip-horizontal"></video>
 </div>
+
+<div id="myVideo" style="">
+    <video height="240" width="360" id="remoteVideo"></video>
+</div>
+
+</span>
 <span>
+
+    <button id="callBtn">Call</button>
+
     <button id="startBtn" disabled="true">Start</button>
     <button id="stopBtn">Stop</button>
+
+    <a id="answerUrl"></a>
+
     </span>
 
 <script type="text/javascript">
 
-    var localVideo = new callme.LocalVideo();
 
-    localVideo.init(document.getElementById("userVideo"));
-
-    var startBtn = $("#startBtn");
-    var stopBtn = $("#stopBtn");
-
-    startBtn.click(function (e) {
-        localVideo.start();
-        startBtn.each(function(){this.disabled = true;});
-        stopBtn.each(function(){this.disabled = false;});
-
-
-    });
-
-    stopBtn.click(function (e) {
-        localVideo.stop();
-        startBtn.each(function(){this.disabled = false;})
-        stopBtn.each(function(){this.disabled = true;})
-    });
 
 </script>
 
