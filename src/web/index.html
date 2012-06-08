@@ -2,28 +2,50 @@
         "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-    <title>App.js demo</title>
+    <title>callme.js demo</title>
 
-    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css"/>
 
-    <script type="text/javascript" src="../js/Utils.js" ></script>
-    <script type="text/javascript" src="../js/App.js" ></script>
+    <script type="text/javascript" src="../js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="../js/Utils.js"></script>
+    <script type="text/javascript" src="../js/LocalVideo.js"></script>
+    <script type="text/javascript" src="../js/RemoteVideo.js"></script>
 
 </head>
 <body>
 
-    <div id="myVideo" style="height:480px;width: 640px;">
-        <video height="240" width="360" id="userVideo" class="flip-horizontal"></video>
-    </div>
+<div id="myVideo" style="height:480px;width: 640px;">
+    <video height="240" width="360" id="userVideo" class="flip-horizontal"></video>
+</div>
+<span>
+    <button id="startBtn" disabled="true">Start</button>
+    <button id="stopBtn">Stop</button>
+    </span>
 
-    <script type="text/javascript">
+<script type="text/javascript">
 
-        var foo = new callme.App();
+    var localVideo = new callme.LocalVideo();
 
-        foo.init(document.getElementById("userVideo"));
+    localVideo.init(document.getElementById("userVideo"));
 
-    </script>
+    var startBtn = $("#startBtn");
+    var stopBtn = $("#stopBtn");
 
+    startBtn.click(function (e) {
+        localVideo.start();
+        startBtn.each(function(){this.disabled = true;});
+        stopBtn.each(function(){this.disabled = false;});
+
+
+    });
+
+    stopBtn.click(function (e) {
+        localVideo.stop();
+        startBtn.each(function(){this.disabled = false;})
+        stopBtn.each(function(){this.disabled = true;})
+    });
+
+</script>
 
 
 </body>
