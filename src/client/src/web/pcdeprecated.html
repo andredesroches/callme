@@ -1,0 +1,94 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>callme.js demo</title>
+
+    <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+
+    <script type="text/javascript" src="../js/jquery-1.7.2.min.js"></script>
+
+    <script type="text/javascript" src="../js/Utils.js"></script>
+
+    <script type="text/javascript" src="../js/LocalVideo.js"></script>
+
+
+</head>
+<body>
+
+<span>
+<div id="myVideo" style="float: left">
+    <video height="240" width="360" id="userVideo" class="flip-horizontal"></video>
+</div>
+
+<div id="myRemoteVideo" style="">
+    <video height="240" width="360" id="remoteVideo"></video>
+</div>
+
+</span>
+<span>
+
+    <button id="callBtn">Get Url</button>
+
+    <button id="startBtn" disabled="true">Start</button>
+    <button id="stopBtn">Stop</button>
+
+    <a id="answerUrl"></a>
+
+    </span>
+
+<script type="text/javascript">
+
+    var localEl = $("#userVideo")[0];
+
+    var remoteEl = $("#remoteVideo")[0];
+
+    var localVideo = new callme.LocalVideo();
+    localVideo.init(localEl,gotLocalVideo);
+
+    var pc = new webkitDeprecatedPeerConnection("STUN stun.l.google.com:19302", gotSignalling);
+
+    pc.onaddstream = function(evt){
+
+        remoteEl.src = callme.utils.URL().createObjectURL(evt.stream);
+        remoteEl.play();
+
+    }
+
+    var answered = false;
+
+    function gotSignalling(signal){
+
+        console.log(signal);
+
+        if (!answered&&signal.search("OFFER")!=-1)
+        {
+
+
+
+            var answer = callme.utils.getLoopBackAnswer(signal);
+
+            pc.processSignalingMessage(answer);
+
+            answered=true;
+        }
+
+
+
+    }
+
+    function gotLocalVideo(stream){
+
+        pc.addStream(stream);
+
+
+
+    }
+
+
+
+</script>
+
+
+</body>
+</html>

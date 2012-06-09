@@ -29,6 +29,11 @@ $(document).ready(function(){
         if (theirAddr)
         {
             var offer = remoteVideo.call(localVideo.getStream());
+
+//            var answerSdp = callme.utils.getLoopBackAnswer(offer.toSdp());
+//
+//            remoteVideo.answer(new SessionDescription(answerSdp));
+
             signalingSocket.send(theirAddr,{type:"offer", sdp:offer.toSdp()});
 
         }
@@ -66,6 +71,8 @@ $(document).ready(function(){
 
     callBtn.click(function(e){
 //        var offer = remoteVideo.call(localVideo.getStream());
+
+//        remoteVideo.call(localVideo.getStream());
 
         var url = window.location.href+"?callerAddr="+myAddr;
 

@@ -67,16 +67,11 @@ callme.RemoteVideo.prototype.answer = function(description, localStream){
             that._().element.play();
         };
 
-        rc.onopen = function(evt){
-            console.warn("answerer got onopen");
-        }
 
 //
 
 
         rc.setRemoteDescription(rc.SDP_OFFER, description);
-
-        var ice = rc.startIce();
 
         //these APIs are weird, might want to abstract everything out
         var answer = rc.createAnswer(description.toSdp());
@@ -105,8 +100,8 @@ callme.RemoteVideo.prototype.acknowledgeAnswer = function(answer){
 
     try
     {
-    var rc = this._().remoteConnection;
-    rc.setRemoteDescription(rc.SDP_ANSWER, answer);
+        var rc = this._().remoteConnection;
+        rc.setRemoteDescription(rc.SDP_ANSWER, answer);
     }
     catch (e)
     {
@@ -122,13 +117,12 @@ callme.RemoteVideo.prototype.call = function(localStream){
         var rc = this._().remoteConnection;
         if (!rc)
         {
-        var rc = callme.utils.createPeerConnection(this._().peerConnectionCreated,
-                    this._().peerConnectionCreationFailed);
+            var rc = new webkitDeprecatedPeerConnection("NONE", onSignalling);
             this._().remoteConnection = rc;
         }
 
 
-        rc.addStream(localStream);
+
 
         var that = this;
 
@@ -138,20 +132,19 @@ callme.RemoteVideo.prototype.call = function(localStream){
             that._().element.play();
         };
 
-        rc.onopen = function(evt){
-            console.warn("caller got onopen");
+
+
+        function onSignalling(signal)
+        {
+            if (signal.indexOf("ANSWER")===-1)
+            {
+                var answer = callme.utils.getLoopBackAnswer(signal)
+            }
+
+
         }
 
-        var offer = rc.createOffer();
-        rc.setLocalDescription(rc.SDP_OFFER,offer);
-
-        var ice = rc.startIce();
-
-        //we want to push this offer to the other side (which might mean putting it in an url?)
-//        callme.utils.dir(offer);
-        callme.utils.dir(offer.toSdp());
-
-        var sdp = offer.toSdp();
+        rc.addStream(localStream);
 //        var url = escape(sdp);
 
 //        var sd = new SessionDescription(unescape(url));

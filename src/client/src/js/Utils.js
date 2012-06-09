@@ -109,3 +109,44 @@ callme.utils.getParameterByName = function(name)
     else
         return decodeURIComponent(results[1].replace(/\+/g, " "));
 }
+
+callme.utils.getLoopBackAnswer = function(data){
+    if (data.search("OFFER") != -1) {
+        // In loopback mode, replace the ROAP OFFER with ROAP ANSWER.
+        data = data.replace("OFFER", "ANSWER");
+        // Keep only the first crypto line for each m line in the answer.
+        var mlines = data.split("m=");
+        // Start from 1 because the first item in the array is not a m line.
+        for (var i = 1; i < mlines.length; ++i) {
+            var mline = mlines[i];
+            var cryptoBegin = mline.indexOf("a=crypto:", 0);
+            if (cryptoBegin == -1) {
+                // No crypto line found.
+                continue;
+            }
+            // Skip the first crypto line.
+            cryptoBegin = mline.indexOf("a=crypto:", cryptoBegin + 1);
+            while (cryptoBegin != -1) {
+                var cryptoEnd = mline.indexOf("\\n", cryptoBegin);
+                var crypto = mline.substring(cryptoBegin, cryptoEnd + 2);
+                data = data.replace(crypto, "");
+                // Search for the the next crypto line.
+                cryptoBegin = mline.indexOf("a=crypto:", cryptoBegin + 1);
+            }
+        }
+        var lines = data.split("\n");
+        for (var i = 0; i < lines.length; ++i) {
+            // Look for the offererSessionId and use it as answererSessionId
+            if (lines[i].length > 0 && lines[i].search("offererSessionId") != -1) {
+                var answer_session_id =
+                    lines[i].replace("offererSessionId", "answererSessionId");
+                answer_session_id += "\n" + lines[i];
+                data = data.replace(lines[i], answer_session_id);
+            }
+        }
+
+        return data;
+    }
+    return null;
+}
+

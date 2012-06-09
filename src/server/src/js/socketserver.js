@@ -52,7 +52,7 @@ function processMessage(message, connection){
         console.log(obj.sender+" is now connected");
     }
     else{
-        console.log(obj.sender+" is not a recognized sender");
+        console.log(obj.sender+" connection added");
     }
 
     var out = connectedClients[obj.destination]
