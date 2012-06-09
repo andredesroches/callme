@@ -34,12 +34,12 @@ callme.RemoteVideo.prototype.init = function(element){
 
 callme.RemoteVideo.prototype.answerSdp = function(sdp, localStream){
 
-    var sd = new SessionDescription(unescape(sdp));
+    var sd = new SessionDescription(sdp);
 
     callme.utils.dir(sd);
     callme.utils.dir(sd.toSdp());
 
-    this.answer(sd);
+    this.answer(sd, localStream);
 
 }
 
@@ -56,16 +56,34 @@ callme.RemoteVideo.prototype.answer = function(description, localStream){
         if (localStream)
             rc.addStream(localStream);
 
-        rc.setRemoteDescription("offer", description);
+        var that = this;
 
         rc.onaddstream = function (evt)
         {
-            this._().element.src = callme.utils.URL().createObjectURL(evt.stream)
+            callme.utils.log("got addstream event");
+            that._().element.src = callme.utils.URL().createObjectURL(evt.stream);
+            that._().element.play();
         };
 
-       rc.createAnswer(rc.remoteDescription, function(description){
-           rc.setLocalDescription("offer",description);
-       });
+
+//
+
+
+        rc.setRemoteDescription(rc.SDP_OFFER, description);
+
+        //these APIs are weird, might want to abstract everything out
+        var answer = rc.createAnswer(description.toSdp());
+
+        callme.utils.dir(answer.toSdp());
+
+        rc.setLocalDescription(rc.SDP_ANSWER, answer);
+
+
+        return answer;
+
+//       rc.createAnswer(description.toSdp());, function(description){
+
+//       });
 
     }
     catch (e)
@@ -75,6 +93,13 @@ callme.RemoteVideo.prototype.answer = function(description, localStream){
 
 
 }
+
+callme.RemoteVideo.prototype.acknowledgeAnswer = function(answer){
+
+    var rc = this._().remoteConnection;
+    rc.setRemoteDescription(rc.SDP_ANSWER, answer);
+
+};
 
 callme.RemoteVideo.prototype.call = function(localStream){
 
@@ -87,29 +112,37 @@ callme.RemoteVideo.prototype.call = function(localStream){
 
         rc.addStream(localStream);
 
+        var that = this;
+
         rc.onaddstream = function (evt)
         {
-            this._().element.src = callme.utils.URL().createObjectURL(evt.stream)
+            that._().element.src = callme.utils.URL().createObjectURL(evt.stream)
+            that._().element.play();
         };
 
-        var offer = rc.createOffer(function(description){
-            rc.setLocalDescription("offer",description);
-        });
+        var offer = rc.createOffer();
+        rc.setLocalDescription(rc.SDP_OFFER,offer);
+
+        var ice = rc.startIce();
 
         //we want to push this offer to the other side (which might mean putting it in an url?)
 //        callme.utils.dir(offer);
-//        callme.utils.dir(offer.toSdp());
+        callme.utils.dir(offer.toSdp());
 
         var sdp = offer.toSdp();
-        var url = escape(sdp);
+//        var url = escape(sdp);
 
 //        var sd = new SessionDescription(unescape(url));
 
-        callme.utils.dir(url);
+//        callme.utils.log(url);
 
 //        this.answer(offer);
 
-        return window.location.href+"?"+url;
+
+
+        return offer;//window.location.href+"?sdp="+url;
+
+
 
     }
     catch (e)

@@ -14,6 +14,9 @@ callme.LocalVideo = function(){
 
             that._().localStream = stream;
 
+            if (that._().gotVideoCallback)
+                that._().gotVideoCallback(stream);
+
         },
 
         userMediaFailed: function()
@@ -30,9 +33,11 @@ callme.LocalVideo = function(){
 
 
 
-callme.LocalVideo.prototype.init = function(element){
+callme.LocalVideo.prototype.init = function(element, gotVideoCallback){
 
         this._().element = element;
+
+        this._().gotVideoCallback = gotVideoCallback;
 
         this.start();
 		

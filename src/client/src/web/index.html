@@ -8,6 +8,7 @@
 
     <script type="text/javascript" src="../js/jquery-1.7.2.min.js"></script>
     <script type="text/javascript" src="../js/Utils.js"></script>
+    <script type="text/javascript" src="../js/WebSocketApi.js"></script>
     <script type="text/javascript" src="../js/LocalVideo.js"></script>
     <script type="text/javascript" src="../js/RemoteVideo.js"></script>
 
@@ -21,14 +22,14 @@
     <video height="240" width="360" id="userVideo" class="flip-horizontal"></video>
 </div>
 
-<div id="myVideo" style="">
+<div id="myRemoteVideo" style="">
     <video height="240" width="360" id="remoteVideo"></video>
 </div>
 
 </span>
 <span>
 
-    <button id="callBtn">Call</button>
+    <button id="callBtn">Get Url</button>
 
     <button id="startBtn" disabled="true">Start</button>
     <button id="stopBtn">Stop</button>
