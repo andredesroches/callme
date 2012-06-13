@@ -7,6 +7,7 @@
     <link rel="stylesheet" type="text/css" href="../css/style.css"/>
 
     <script type="text/javascript" src="../js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="../js/jquery-ui-1.8.21.custom.min.js"></script>
 
     <script type="text/javascript" src="../js/Utils.js"></script>
 
@@ -17,13 +18,17 @@
 <body>
 
 <span>
-<div id="myVideo" style="float: left">
-    <video height="240" width="360" id="userVideo" class="flip-horizontal"></video>
+
+
+<div id="myRemoteVideo" style="background: black; position: absolute;">
+    <video height="480" width="640" id="remoteVideo" ></video>
+
+    <div id="myVideo" style="position: absolute; background: yellow; top:350px;left:450px;">
+        <video height="120" width="180" id="userVideo" class="flip-horizontal"></video>
+    </div>
+
 </div>
 
-<div id="myRemoteVideo" style="">
-    <video height="240" width="360" id="remoteVideo"></video>
-</div>
 
 </span>
 <span>
@@ -39,7 +44,19 @@
 
 <script type="text/javascript">
 
+$(document).ready(function(){
+    var localHolder = $("#myVideo");
+
+    localHolder.draggable();
+
+    var remoteHolder = $("myRemoteVideo");
+
+    remoteHolder.draggable();
+});
+
     var localEl = $("#userVideo")[0];
+
+
 
     var remoteEl = $("#remoteVideo")[0];
 
@@ -80,9 +97,6 @@
     function gotLocalVideo(stream){
 
         pc.addStream(stream);
-
-
-
     }
 
 
